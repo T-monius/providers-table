@@ -1,24 +1,26 @@
-import logo from './logo.svg';
-import './App.css';
-
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <table>
+      <thead>
+        <tr>
+          <th colspan="5">Healthcare Providers by NPI</th>
+        </tr>
+        <tr>
+          <th>Name</th>
+          <th>NPI</th>
+          <th>Address</th>
+          <th>Phone Number</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1902809197</td>
+          <td>Dr. JEFFREY DOME MD</td>
+          <td>111 MICHIGAN AVE NW, WASHINGTON, DC, 200102916, United States</td>
+          <td>202-476-2800</td>
+        </tr>
+      </tbody>
+    </table>
   );
 }
 
