@@ -31,20 +31,32 @@ class HealthcareProvidersTable extends Component {
     this.setState({providers: response.data || this.state.providers});
   }
 
+  isProvidersContainsNPI = (npi) => {
+    return this.state.providers.find((provider) => provider.npi === npi);
+  }
+
   onSubmit = async (e) => {
     e.preventDefault();
 
-    if (this.state.npi.length === 10) {
-      let response;
+    if (this.state.npi.length !== 10) { return }
+
+    let response;
+    if (this.isProvidersContainsNPI(this.state.npi)) {
+      try {
+        response = await axios.patch(`PROVIDERS_URL/${this.state.npi}`, {npi: this.state.npi});
+      } catch(e) {
+        console.log(e);
+        return;
+      };
+    } else {
       try {
         response = await axios.post(PROVIDERS_URL, {npi: this.state.npi});
       } catch(e) {
         console.log(e);
         return;
       };
-
-      this.setState({providers: this.state.providers.concat(response), npi: ''})
-    };
+    }
+      this.setState({providers: this.state.providers.concat(response), npi: ''});
   };
 
   handleNPIChange = (e) => {
@@ -61,21 +73,31 @@ class HealthcareProvidersTable extends Component {
               <th colSpan="5">Healthcare Providers by NPI</th>
             </tr>
             <tr>
-              <th>Name</th>
               <th>NPI</th>
+              <th>Name</th>
               <th>Address</th>
               <th>Phone Number</th>
+              <th>Organization</th>
+              <th>Taxonomy</th>
             </tr>
           </thead>
           <tbody>
-            {this.state.providers.map((provider) => {
-              const { npi, name, address, telephone_number: telephoneNumber } = provider;
+            {this.state.providers
+              .sort((p1, p2) => {
+                const t1 = new Date(p1.updated_at).getTime();
+                const t2 = new Date(p2.updated_at).getTime();
+                return t2 - t1;
+              })
+              .map((provider) => {
+              const { npi, name, address, telephone_number: telephoneNumber, organization, taxonomy } = provider;
               return (
                 <tr id={npi}>
                   <td>{npi}</td>
                   <td>{name}</td>
                   <td>{address}</td>
                   <td>{telephoneNumber}</td>
+                  <td>{String(organization)}</td>
+                  <td>{taxonomy}</td>
                 </tr>
               )
             })}
